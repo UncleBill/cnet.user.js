@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name China-net-fill
+// @name China-net-autofill
 // @description 自动填写用户名和密码
 // @include http://61.137.86.87:8080/portalNat444/index.jsp
-// @author UncleBill
+// @author UncleBill <billbill290@gmail.com>
 // @version 0.01
 // @date 2013-04-15
 // @license MIT License
@@ -11,59 +11,39 @@
 
 (function(){
 
-    var ultis = {
-        $id : function( id ){
-            return document.getElementById( id );
-        }
+    var $id = function( id ){
+        return document.getElementById( id );
+    };
+    var $getItem = function( attr ){
+        return localStorage.getItem(attr);
+    };
+    var $setItem = function( attr, value ){
+        localStorage.setItem( attr, value );
     };
 
 
     console.log('loaded');
 
-    var _ACCOUNT_ = "01124611158";
-    var _PASSWORD_ = "329225";
+    var storedAccount = $getItem("account");
+    var storedPassword = $getItem("password");
 
-    var storedAccount = localStorage.getItem("account");
-    var storedPassword = localStorage.getItem("password");
+    console.log('stored items',storedAccount,storedPassword);
 
-    console.log('is localStorage',storedAccount,storedPassword);
-    if( storedAccount || storedPassword ){
-        _ACCOUNT_ = storedAccount;
-        _PASSWORD_ = storedPassword;
-    }
-
-    var account = ultis.$id("account");
-    var password = ultis.$id("userPassword");
+    var account = $id("account");
+    var password = $id("userPassword");
     if( account ){
-        account.value = _ACCOUNT_;
-        password.value = _PASSWORD_;
+        account.value = storedAccount;
+        password.value = storedPassword;
         console.log( 'done!' );
     }
 
-    var radio = document.createElement("input");
-    var label = document.createElement("label");
-    radio.setAttribute("type","checkbox");
-    radio.setAttribute("name","member");
-    radio.setAttribute("id","member");
-    label.setAttribute("for","member");
-    label.textContent = "记住密码";
-
-    var parent = password.parentElement;
-    parent.appendChild(radio);
-    parent.appendChild(label);
-
-    var logBtn = ultis.$id("login_button");
+    var logBtn = $id("login_button");
     logBtn.addEventListener("click",function(){
-        var ismember = ultis.$id("member");
-        if( isMember.checked ){
-            localStorage['account'] = account.value;
-            localStorage['password'] = password.value;
-        } else {
-            localStorage['account'] = "";
-            localStorage['password'] = "";
-        }
-    })
-    console.log( 'localStorage:','account:',localStorage['account'],'password',localStorage['password'] );
+        console.log('will store:',account.value,password.value);
+        $setItem("account",account.value);
+        $setItem("password",password.value);
+    });
+    console.log( 'localStorage:','account:',$getItem( 'account' ),'password',$getItem( 'password' ) );
 
 
 }()); // closure
