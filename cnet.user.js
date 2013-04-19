@@ -14,8 +14,8 @@
     var ultis = {
         $id : function( id ){
             return document.getElementById( id );
-        },
-    }
+        }
+    };
 
 
     console.log('loaded');
